@@ -1,5 +1,5 @@
 module.exports = {
-  outputDir: 'doc',
+  outputDir: 'docs',
   baseUrl: process.env.NODE_ENV === 'production'
     ? '/Vue-Ebook/'
     : '/'

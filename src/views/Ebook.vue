@@ -32,7 +32,8 @@ import SlideDown from '@/components/SlideDown'
 import SlideUp from '@/components/SlideUp'
 import SlideRight from '@/components/SlideRight'
 import Fade from '@/components/Fade'
-const DOWNLOAD_URL = '/epub/2018_Book_AgileProcessesInSoftwareEngine.epub'
+const DOWNLOAD_URL = '/Vue-Ebook/epub/2018_Book_AgileProcessesInSoftwareEngine.epub' // Prod
+// const DOWNLOAD_URL = '/epub/2018_Book_AgileProcessesInSoftwareEngine.epub' // Local
 export default {
   name: 'Ebook',
   components: {
