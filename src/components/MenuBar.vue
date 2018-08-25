@@ -37,6 +37,14 @@
             <div class="desc" v-text="item.name" :class="{'selected': index === theme}"></div>
           </div>
         </div>
+        <div class="setting-progress" v-else-if="showTag === 1">
+          <div class="progress-wrapper">
+            <input type="range" class="progress" max="100" min="0" step="1" @change="onProgressChange" @input="onProgressInput" v-model="progress" :disabled="!bookAvailable" ref="progress">
+          </div>
+          <div class="text-wrapper">
+            <span v-text="bookAvailable ? progress + '%' : '加载中...'"></span>
+          </div>
+        </div>
       </div>
     </slide-up>
   </div>
@@ -49,7 +57,8 @@ export default {
   data () {
     return {
       isSettingShow: false,
-      showTag: null
+      showTag: null,
+      progress: 0
     }
   },
   props: {
@@ -57,7 +66,8 @@ export default {
     fontSizeList: Array,
     fontSize: Number,
     themesList: Array,
-    theme: Number
+    theme: Number,
+    bookAvailable: Boolean
   },
   components: {
     SlideUp
@@ -75,6 +85,14 @@ export default {
     },
     setTheme (theme) {
       this.$emit('setTheme', theme)
+    },
+    // 进度条松开后触发事件，根据进度条数值跳转到指定位置
+    onProgressChange () {
+      this.$emit('onProgressChange', this.progress)
+    },
+    // 拖动进度条时触发事件
+    onProgressInput () {
+      this.$refs.progress.style.backgroundSize = `${this.progress}% 100%`
     }
   }
 }
@@ -167,6 +185,7 @@ export default {
         .setting-theme-item
           flex 1
           display flex
+          height 100%
           flex-direction column
           padding px2rem(5)
           box-sizing border-box
@@ -183,4 +202,38 @@ export default {
             center()
             &.selected
               color: #333
+      .setting-progress
+        width 100%
+        height 100%
+        position relative
+        .progress-wrapper
+          width 100%
+          height 100%
+          center()
+          padding 0 px2rem(30)
+          box-sizing border-box
+          .progress
+            width 100%
+            -webkit-appearance none
+            height px2rem(2)
+            background linear-gradient(#999, #999) no-repeat, #DDD
+            background-size 0 100%
+            &::-webkit-slider-thumb
+              -webkit-appearance none
+              height px2rem(20)
+              width px2rem(20)
+              border-radius 50%
+              background-color #FFF
+              box-shadow 0 px2rem(3) px2rem(4) rgba(0, 0, 0, .15)
+              border px2rem(1) solid #CCC
+            &:focus
+              outline none
+        .text-wrapper
+          position absolute
+          left 0
+          bottom 0
+          width 100%
+          color #333
+          font-size px2rem(12)
+          text-align center
 </style>

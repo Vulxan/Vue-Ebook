@@ -12,7 +12,7 @@
       </div>
     </div>
     <slide-up>
-      <menu-bar v-show="isTitleAndMenuShow" ref="menuBar" :isTitleAndMenuShow="isTitleAndMenuShow" :fontSizeList="fontSizeList" :fontSize="defaultFontSize" @setFontSize="setFontSize" :themesList="themesList" :theme="defaultTheme" @setTheme="setTheme"></menu-bar>
+      <menu-bar v-show="isTitleAndMenuShow" ref="menuBar" :isTitleAndMenuShow="isTitleAndMenuShow" :fontSizeList="fontSizeList" :fontSize="defaultFontSize" @setFontSize="setFontSize" :themesList="themesList" :theme="defaultTheme" @setTheme="setTheme" :bookAvailable="bookAvailable" @onProgressChange="onProgressChange"></menu-bar>
     </slide-up>
   </div>
 </template>
@@ -83,10 +83,17 @@ export default {
           }
         }
       ],
-      defaultTheme: 0
+      defaultTheme: 0,
+      // 图书是否处于可用状态
+      bookAvailable: false
     }
   },
   methods: {
+    onProgressChange (progress) {
+      const percentage = progress / 100
+      const location = percentage > 0 ? this.locations.cfiFromPercentage(percentage) : 0
+      this.rendition.display(location)
+    },
     registerTheme () {
       this.themesList.forEach(theme => {
         this.themes.register(theme.name, theme.style)
@@ -139,6 +146,14 @@ export default {
       this.registerTheme()
       // this.themes.select(name)
       this.setTheme(this.defaultTheme)
+      // 获取 Locations 对象
+      // 通过 epubjs 的钩子函数来实现
+      this.book.ready.then(() => {
+        return this.book.locations.generate()
+      }).then(() => {
+        this.locations = this.book.locations
+        this.bookAvailable = true
+      })
     }
   },
   mounted () {
