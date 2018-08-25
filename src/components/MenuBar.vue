@@ -52,6 +52,7 @@
 
 <script>
 import SlideUp from './SlideUp'
+
 export default {
   name: 'MenuBar',
   data () {
@@ -75,7 +76,12 @@ export default {
   methods: {
     showSetting (tag) {
       this.showTag = tag
-      this.isSettingShow = true
+      if (this.showTag > 0) {
+        this.isSettingShow = true
+      } else {
+        this.isSettingShow = false
+        this.$emit('showContent')
+      }
     },
     hideSetting () {
       this.isSettingShow = false
@@ -93,6 +99,9 @@ export default {
     // 拖动进度条时触发事件
     onProgressInput () {
       this.$refs.progress.style.backgroundSize = `${this.progress}% 100%`
+    },
+    jumpTo (target) {
+      this.$emit('jumpTo', target)
     }
   }
 }

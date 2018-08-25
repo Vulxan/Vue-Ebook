@@ -12,8 +12,14 @@
       </div>
     </div>
     <slide-up>
-      <menu-bar v-show="isTitleAndMenuShow" ref="menuBar" :isTitleAndMenuShow="isTitleAndMenuShow" :fontSizeList="fontSizeList" :fontSize="defaultFontSize" @setFontSize="setFontSize" :themesList="themesList" :theme="defaultTheme" @setTheme="setTheme" :bookAvailable="bookAvailable" @onProgressChange="onProgressChange"></menu-bar>
+      <menu-bar v-show="isTitleAndMenuShow" ref="menuBar" :isTitleAndMenuShow="isTitleAndMenuShow" :fontSizeList="fontSizeList" :fontSize="defaultFontSize" @setFontSize="setFontSize" :themesList="themesList" :theme="defaultTheme" @setTheme="setTheme" :bookAvailable="bookAvailable" @onProgressChange="onProgressChange" @showContent="showContent"></menu-bar>
     </slide-up>
+    <slide-right>
+      <table-content v-show="isContentShow" :bookAvailable="bookAvailable" :navigation="navigation" @jumpTo="jumpTo"></table-content>
+    </slide-right>
+    <fade>
+      <div class="table-content-mask" v-show="isContentShow" @click="hideAll"></div>
+    </fade>
   </div>
 </template>
 
@@ -21,16 +27,22 @@
 import Epub from 'epubjs'
 import TitleBar from '@/components/TitleBar'
 import MenuBar from '@/components/MenuBar'
+import TableContent from '@/components/TableContent'
 import SlideDown from '@/components/SlideDown'
 import SlideUp from '@/components/SlideUp'
+import SlideRight from '@/components/SlideRight'
+import Fade from '@/components/Fade'
 const DOWNLOAD_URL = '/epub/2018_Book_AgileProcessesInSoftwareEngine.epub'
 export default {
   name: 'Ebook',
   components: {
     TitleBar,
     MenuBar,
+    TableContent,
     SlideDown,
-    SlideUp
+    SlideUp,
+    SlideRight,
+    Fade
   },
   data () {
     return {
@@ -85,10 +97,26 @@ export default {
       ],
       defaultTheme: 0,
       // 图书是否处于可用状态
-      bookAvailable: false
+      bookAvailable: false,
+      navigation: null,
+      isContentShow: false
     }
   },
   methods: {
+    // 根据链接跳转到指定位置
+    jumpTo (href) {
+      this.rendition.display(href)
+      this.toggleTitleAndMenu()
+      this.isContentShow = false
+    },
+    showContent () {
+      this.isContentShow = true
+    },
+    hideAll () {
+      this.isContentShow = false
+      this.toggleTitleAndMenu()
+    },
+    // progress 进度条的数值(0-100)
     onProgressChange (progress) {
       const percentage = progress / 100
       const location = percentage > 0 ? this.locations.cfiFromPercentage(percentage) : 0
@@ -149,6 +177,7 @@ export default {
       // 获取 Locations 对象
       // 通过 epubjs 的钩子函数来实现
       this.book.ready.then(() => {
+        this.navigation = this.book.navigation
         return this.book.locations.generate()
       }).then(() => {
         this.locations = this.book.locations
@@ -181,4 +210,12 @@ export default {
           flex 1
         .right
           flex 0 0 px2rem(100)
+    .table-content-mask
+      position absolute
+      top 0
+      right 0
+      bottom 0
+      left 0
+      background-color rgba(0, 0, 0, 0.5)
+      z-index 125
 </style>
