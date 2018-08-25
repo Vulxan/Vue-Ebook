@@ -2,21 +2,21 @@
   <div class="menu-bar">
     <div class="menu-wrapper" :class="{'hide-box-shadow': isSettingShow || !isTitleAndMenuShow}">
       <div class="icon-wrapper">
-        <span class="icon icon-menu"></span>
+        <span class="icon icon-menu" @click="showSetting(0)"></span>
       </div>
       <div class="icon-wrapper">
-        <span class="icon icon-progress"></span>
+        <span class="icon icon-progress" @click="showSetting(1)"></span>
       </div>
       <div class="icon-wrapper">
-        <span class="icon icon-bright"></span>
+        <span class="icon icon-bright" @click="showSetting(2)"></span>
       </div>
       <div class="icon-wrapper">
-        <span class="icon icon-a" @click="showSetting">A</span>
+        <span class="icon icon-a" @click="showSetting(3)">A</span>
       </div>
     </div>
     <slide-up>
       <div class="setting-wrapper" v-show="isSettingShow">
-        <div class="setting-font-size">
+        <div class="setting-font-size" v-if="showTag === 3">
           <div class="preview" :style="{ fontSize: fontSizeList[0].fontSize + 'px'}">A</div>
           <div class="select">
             <div class="select-wrapper" v-for="(item, index) of fontSizeList" :key="index" @click="setFontSize(item.fontSize)">
@@ -31,6 +31,12 @@
           </div>
           <div class="preview" :style="{ fontSize: fontSizeList[fontSizeList.length - 1].fontSize + 'px'}">A</div>
         </div>
+        <div class="setting-theme" v-else-if="showTag === 2">
+          <div class="setting-theme-item" v-for="(item, index) of themesList" :key="index" @click="setTheme(index)">
+            <div class="preview" :style="{background: item.style.body.background}"></div>
+            <div class="desc" v-text="item.name" :class="{'selected': index === theme}"></div>
+          </div>
+        </div>
       </div>
     </slide-up>
   </div>
@@ -42,22 +48,23 @@ export default {
   name: 'MenuBar',
   data () {
     return {
-      isSettingShow: false
+      isSettingShow: false,
+      showTag: null
     }
-  },
-  computed: {
-    isSettingShowBefore: () => !this.isSettingShow
   },
   props: {
     isTitleAndMenuShow: Boolean,
     fontSizeList: Array,
-    fontSize: Number
+    fontSize: Number,
+    themesList: Array,
+    theme: Number
   },
   components: {
     SlideUp
   },
   methods: {
-    showSetting () {
+    showSetting (tag) {
+      this.showTag = tag
       this.isSettingShow = true
     },
     hideSetting () {
@@ -65,6 +72,9 @@ export default {
     },
     setFontSize (fontSize) {
       this.$emit('setFontSize', fontSize)
+    },
+    setTheme (theme) {
+      this.$emit('setTheme', theme)
     }
   }
 }
@@ -132,7 +142,6 @@ export default {
             .point-wrapper
               position relative
               flex 0 0 0
-              width 0
               height px2rem(7)
               border-left px2rem(1) solid #CCC
               .point
@@ -152,4 +161,26 @@ export default {
                   height px2rem(5)
                   background-color black
                   border-radius 50%
+      .setting-theme
+        height 100%
+        display flex
+        .setting-theme-item
+          flex 1
+          display flex
+          flex-direction column
+          padding px2rem(5)
+          box-sizing border-box
+          &:first-child
+            .preview
+              border px2rem(1) solid #CCC
+          .preview
+            flex 1
+            box-sizing border-box
+          .desc
+            flex 0 0 px2rem(20)
+            font-size px2rem(14)
+            color #CCC
+            center()
+            &.selected
+              color: #333
 </style>
