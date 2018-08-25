@@ -205,11 +205,11 @@ export default {
         left 0
         z-index 50
         .left
-          flex 0 0 px2rem(100)
+          flex 0 0 px2rem(140)
         .center
           flex 1
         .right
-          flex 0 0 px2rem(100)
+          flex 0 0 px2rem(140)
     .table-content-mask
       position absolute
       top 0

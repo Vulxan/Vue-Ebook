@@ -19,5 +19,5 @@ export default {
     transform translate3d(0, 0, 0)
   .slide-right-enter-active
   .slide-right-leave-active
-    transition transform .1s linear
+    transition transform .2s linear
 </style>
