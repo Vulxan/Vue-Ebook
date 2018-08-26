@@ -1,6 +1,6 @@
 <template>
   <div class="menu-bar">
-    <div class="menu-wrapper" :class="{'hide-box-shadow': isSettingShow || !isTitleAndMenuShow}">
+    <div class="menu-wrapper">
       <div class="icon-wrapper">
         <span class="icon icon-menu" @click="showSetting(0)"></span>
       </div>
@@ -14,8 +14,8 @@
         <span class="icon icon-a" @click="showSetting(3)">A</span>
       </div>
     </div>
-    <slide-up>
-      <div class="setting-wrapper" v-show="isSettingShow">
+    <!-- <slide-up> -->
+      <div class="setting-wrapper" :class="{'setting-show': isSettingShow}">
         <div class="setting-font-size" v-if="showTag === 3">
           <div class="preview" :style="{ fontSize: fontSizeList[0].fontSize + 'px'}">A</div>
           <div class="select">
@@ -46,7 +46,7 @@
           </div>
         </div>
       </div>
-    </slide-up>
+    <!-- </slide-up> -->
   </div>
 </template>
 
@@ -118,24 +118,30 @@ export default {
     z-index 100
     height px2rem(48)
     .menu-wrapper
+      position relative
       width 100%
       height 100%
       background-color white
       display flex
-      box-shadow 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, .15)
-      &.hide-box-shadow
-        box-shadow none
+      z-index 100
+      // box-shadow 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, .15)
+      // &.hide-box-shadow
+      //   box-shadow none
       .icon-wrapper
         flex 1
         center()
     .setting-wrapper
+      z-index 90
       position absolute
-      bottom px2rem(48)
+      top 0
       left 0
       width 100%
       height px2rem(60)
       background-color white
+      transition transform .2s linear
       box-shadow 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, .15)
+      &.setting-show
+        transform translate3d(0, px2rem(-60), 0)
       .setting-font-size
         height 100%
         display flex
