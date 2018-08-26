@@ -236,11 +236,11 @@ export default {
         left 0
         z-index 50
         .left
-          flex 0 0 px2rem(140)
-        .center
           flex 1
+        .center
+          flex 2
         .right
-          flex 0 0 px2rem(140)
+          flex 1
     .table-content-mask
       position absolute
       top 0
@@ -260,15 +260,15 @@ export default {
       z-index 100
       color white
       .left
-        flex 0 0 px2rem(140)
+        flex 1
         background-color rgba(29, 176, 184, .5)
         center()
       .center
-        flex 1
+        flex 2
         background-color rgba(0, 52, 63, .5)
         center()
       .right
-        flex 0 0 px2rem(140)
+        flex 1
         background-color rgba(29, 176, 184, .5)
         center()
       .tip
