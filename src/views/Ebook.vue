@@ -20,6 +20,22 @@
     <fade>
       <div class="table-content-mask" v-show="isContentShow" @click="hideAll"></div>
     </fade>
+    <div class="apex-mask" v-if="isApexMaskShow" @click="hideApexMask">
+      <div class="left">
+        <span class="desc">上一页</span>
+      </div>
+      <div class="center">
+        <span class="desc">显示/隐藏菜单栏</span>
+      </div>
+      <div class="right">
+        <span class="desc">下一页</span>
+      </div>
+      <slide-down>
+        <div class="tip" v-if="isTipShow">
+          <span class="text" v-text="tipText"></span>
+        </div>
+      </slide-down>
+    </div>
   </div>
 </template>
 
@@ -100,10 +116,24 @@ export default {
       // 图书是否处于可用状态
       bookAvailable: false,
       navigation: null,
-      isContentShow: false
+      isContentShow: false,
+      isApexMaskShow: true,
+      isTipShow: false
+    }
+  },
+  computed: {
+    tipText () {
+      return this.bookAvailable ? '加载完毕' : '加载中'
     }
   },
   methods: {
+    hideApexMask () {
+      if (!this.bookAvailable) {
+        this.isTipShow = true
+      } else {
+        this.isApexMaskShow = false
+      }
+    },
     // 根据链接跳转到指定位置
     jumpTo (href) {
       this.rendition.display(href)
@@ -219,4 +249,37 @@ export default {
       left 0
       background-color rgba(0, 0, 0, 0.5)
       z-index 125
+    .apex-mask
+      position fixed
+      top 0
+      right 0
+      bottom 0
+      left 0
+      display flex
+      font-size px2rem(20)
+      z-index 100
+      color white
+      .left
+        flex 0 0 px2rem(140)
+        background-color rgba(29, 176, 184, .5)
+        center()
+      .center
+        flex 1
+        background-color rgba(0, 52, 63, .5)
+        center()
+      .right
+        flex 0 0 px2rem(140)
+        background-color rgba(29, 176, 184, .5)
+        center()
+      .tip
+        position absolute
+        top 0
+        left 0
+        right 0
+        border-radius 0 0 px2rem(2) px2rem(2)
+        background-color #fff
+        padding px2rem(10)
+        text-align center
+        color #000
+        font-size px2rem(10)
 </style>
